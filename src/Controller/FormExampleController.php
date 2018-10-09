@@ -2,9 +2,10 @@
 namespace App\Controller;
 use App\Entity\Product;
 use App\Form\Type\ProductType;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+
 class FormExampleController extends Controller
 {
     /**
@@ -19,23 +20,44 @@ class FormExampleController extends Controller
             $product = $form->getData();
             $em->persist($product);
             $em->flush();
-            return $this->redirectToRoute('form_example');
+            return $this->redirectToRoute('all_products');
         }
         return $this->render('/form/product.html.twig', [
             'productForm' => $form->createView()
         ]);
     }
     /**
-     * @Route("/{product}", name="form_edit_example")
+     * @Route("/products",name="all_products")
      */
-    public function formEditExampleAction(Request $request, Product $product)
+    public function showProductsAction(Request $request){
+        $products = $this->getDoctrine()->getRepository(Product::class)->findAll();
+        return $this->render('/plp/products.html.twig',
+            array('products'=>$products)
+        );
+    }
+    /**
+     * @Route("/delete/{id}", name="deleteProduct")
+     */
+    public function deleteAction(Request $request, $id)
     {
-        $em = $this->getDoctrine()->getManager();
+        $entityManager = $this->getDoctrine()->getManager();
+        $product = $entityManager->getRepository(Product::class)->find($id);
+        $entityManager->remove($product);
+        $entityManager->flush();
+        return $this->redirectToRoute('all_products');
+    }
+    /**
+     * @Route("/edit/{id}", name="form_edit_example")
+     */
+    public function editAction(Request $request, $id)
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        $product = $entityManager->getRepository(Product::class)->find($id);
         $form = $this->createForm(ProductType::class, $product);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $em->flush();
-            return $this->redirectToRoute('form_edit_example', ['product'=>$product->getId()]);
+            $entityManager->flush();
+            return $this->redirectToRoute('all_products');
         }
         return $this->render('/form/product.html.twig', [
             'productForm' => $form->createView()
