@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+
+    <h2>Symfony 4 Form Example</h2>
+
+    <hr />
+
+    {{ dump(productForm) }}
+
+    {{ form_start(productForm) }}
+    {% for row in productForm.children %}
+        {{ form_row(row) }}
+    {% endfor %}
+    {{ form_end(productForm) }}
+    {#{{ form(productForm) }}#}
+
+{% endblock %}

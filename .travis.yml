@@ -1,0 +1,14 @@
+dist: trusty
+sudo: required
+language: php
+php:
+  - '7.1.15'
+
+branches:
+  only:
+    - develop
+
+script:
+  - composer install
+#  - composer config repositories.banner vcs https://github.com/JeroenVanLeusden/Bannerslider-Magento2.git
+  - composer require magestore/module-bannerslider --ignore-platform-reqs

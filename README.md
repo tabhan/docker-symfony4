@@ -24,6 +24,7 @@ Once you're done, simply `cd` to your project and run `docker-compose up -d`. Th
 
   * Start containers in the background: `docker-compose up -d`
   * Start containers on the foreground: `docker-compose up`. You will see a stream of logs for every container running.
+  * Install Application dependencies `docker-compose exec php-fpm composer install`
   * Stop containers: `docker-compose stop`
   * Kill containers: `docker-compose kill`
   * View container logs: `docker-compose logs`
